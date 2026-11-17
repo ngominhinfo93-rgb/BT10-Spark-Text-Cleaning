@@ -1,0 +1,35 @@
+{
+  "created_at_utc": "2026-11-17T07:29:36.205213+00:00",
+  "experiment": "BT10 UDF benchmark",
+  "dataset_type": "Real Tiki reviews with controlled repetition to reach 50000 benchmark rows",
+  "source_rows": 45321,
+  "benchmark_rows": 50000,
+  "runs_per_method": 1,
+  "python_version": "3.13.18",
+  "spark_version": "4.0.5",
+  "pandas_version": "2.2.3",
+  "pyarrow_version": "23.0.1",
+  "underthesea_version": "9.5.0",
+  "num_partitions": 2,
+  "python_udf": {
+    "method": "Python UDF",
+    "seconds": 97.3636,
+    "rows": 50000,
+    "total_output_chars": 5665132
+  },
+  "pandas_udf": {
+    "method": "Pandas UDF",
+    "seconds": 93.192,
+    "rows": 50000,
+    "total_output_chars": 5665132
+  },
+  "sample_mismatches": 0,
+  "output_length_checksum_match": true,
+  "speedup_python_over_pandas": 1.044763499012791,
+  "limitations": [
+    "Only one timed run per method",
+    "Input may contain repeated real reviews",
+    "Matching output lengths do not prove row-wise equality",
+    "Results are preliminary, not the 1-million-row experiment"
+  ]
+}

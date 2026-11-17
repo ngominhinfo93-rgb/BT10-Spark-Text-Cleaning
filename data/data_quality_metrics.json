@@ -1,0 +1,20 @@
+{
+  "created_at_utc": "2026-11-17T07:31:20.390035+00:00",
+  "dataset": "Tiki reviews",
+  "raw_deduplicated_rows": 45321,
+  "clean_stage1_rows": 45321,
+  "raw_missing_text": 0,
+  "clean_missing_text": 0,
+  "spam_short_count": 4301,
+  "spam_url_count": 47,
+  "spam_candidate_count": 4348,
+  "spam_short_pct": 9.49,
+  "spam_url_pct": 0.1,
+  "spam_candidate_pct": 9.59,
+  "notes": [
+    "Raw baseline is already deduplicated",
+    "Spam candidate is a preliminary flag",
+    "Similarity detection was bounded, not exhaustive",
+    "Metrics do not represent the original unfiltered source"
+  ]
+}
