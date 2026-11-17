@@ -184,18 +184,45 @@ if "spam_candidate" in filtered.columns:
     elif spam_mode == "Không bị gắn cờ":
         filtered = filtered[~spam_flag]
 
+
 if "review_date" in filtered.columns:
+
+    # Giữ nguyên dữ liệu gốc, chỉ tạo cột ngày phục vụ lọc.
+    # utc=True giúp xử lý ngày có múi giờ nhất quán.
     filtered["review_date_parsed"] = pd.to_datetime(
         filtered["review_date"],
-        errors="coerce"
+        errors="coerce",
+        utc=True,
+        format="mixed"
     )
 
-    valid_dates = (
-        filtered["review_date_parsed"]
-        .dropna()
+    missing_date_mask = filtered[
+        "review_date_parsed"
+    ].isna()
+
+    missing_date_count = int(missing_date_mask.sum())
+
+    include_missing_dates = st.sidebar.checkbox(
+        "Bao gồm đánh giá không có ngày hợp lệ",
+        value=True,
+        help=(
+            "Khi bật, những đánh giá thiếu ngày vẫn "
+            "được giữ trong kết quả lọc."
+        )
     )
+
+    st.sidebar.caption(
+        f"Đánh giá thiếu ngày trong tập đang lọc: "
+        f"{missing_date_count:,}"
+    )
+
+    valid_dates = filtered.loc[
+        ~missing_date_mask,
+        "review_date_parsed"
+    ]
 
     if not valid_dates.empty:
+
         min_date = valid_dates.min().date()
         max_date = valid_dates.max().date()
 
@@ -206,14 +233,31 @@ if "review_date" in filtered.columns:
             max_value=max_date
         )
 
-        if len(selected_dates) == 2:
+        if (
+            isinstance(selected_dates, (tuple, list))
+            and len(selected_dates) == 2
+        ):
             start_date, end_date = selected_dates
 
-            filtered = filtered[
+            in_date_range = (
                 filtered["review_date_parsed"]
                 .dt.date
                 .between(start_date, end_date)
-            ]
+            )
+
+            if include_missing_dates:
+                keep_mask = (
+                    in_date_range | missing_date_mask
+                )
+            else:
+                keep_mask = in_date_range
+
+            filtered = filtered.loc[
+                keep_mask
+            ].copy()
+
+    elif not include_missing_dates:
+        filtered = filtered.iloc[0:0].copy()
 
 st.sidebar.caption(
     "Bộ lọc áp dụng cho bảng đánh giá "
